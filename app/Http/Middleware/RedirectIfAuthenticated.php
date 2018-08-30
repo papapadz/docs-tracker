@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Session;
 
 class RedirectIfAuthenticated
 {
@@ -18,8 +19,10 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/admin/home');
-        }
+            Session::forget('loginfail');
+            return redirect('home');
+        } else
+            Session::set('loginfail','Username or Password is incorrect');
 
         return $next($request);
     }

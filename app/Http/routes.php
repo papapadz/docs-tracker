@@ -15,75 +15,97 @@
 Route::get('/', function () {
     return view('indx');
 });
-Route::get('home', function () {
-    return view('indx');
-});
-
 
 Route::group(['middlewareGroups' => ['web']], function(){
     Route::auth();
 
-    Route::get('menu', 'AdminController@redirectview')->middleware('isAdmin');
-    Route::get('/admin/home', 'AdminController@viewmenu')->middleware('isAdmin');
-    Route::post('/admin/home', 'AdminController@searchtask')->middleware('isAdmin');
+    /* MainController */
+    Route::get('home', [
+        'uses' => 'MainController@viewmenu',
+        'as' => 'view.home'
+    ]);
+    Route::post('home', 'MainController@addnewdoc')->middleware('isAdmin');
+    Route::get('logout', 'MainController@logout')->middleware('isAdmin');
 
-    Route::get('/admin/add-task', 'AdminController@viewaddtask')->middleware('isAdmin');
-    Route::post('/admin/add-task', 'AdminController@addtask')->middleware('isAdmin');
-    Route::get('/admin/edit-task/{task_id}', 'AdminController@viewedittask')->middleware('isAdmin');
-    Route::post('/admin/edit-task/{task_id}', 'AdminController@edittask')->middleware('isAdmin');
-    Route::get('/admin/set-taskstat/{task_id}', 'AdminController@taskundone')->middleware('isAdmin');
+    Route::get('new-doc/{type_id}', 'MainController@viewnewdoc')->middleware('isAdmin');
+    Route::get('document/{doc_id}', 'MainController@viewdocinfo')->middleware('isAdmin');
+    Route::get('document/pdf/{doc_id}', 'MainController@viewpdf')->middleware('isAdmin');
+    Route::get('set-remarks', 'MainController@setremarks')->middleware('isAdmin');
+    Route::get('endorsements', 'MainController@viewendorsed')->middleware('isAdmin');
+    Route::get('document/done/{doc_id}', 'MainController@markdonedoc')->middleware('isAdmin');
+    Route::get('document/undone/{doc_id}', 'MainController@markundonedoc')->middleware('isAdmin');
+    Route::get('document/archive/{doc_id}', 'MainController@archivedoc')->middleware('isAdmin');
+    Route::get('document/restore/{doc_id}', 'MainController@restoredoc')->middleware('isAdmin');
 
-    Route::get('/admin/delete-task/{task_id}', 'AdminController@deletetask')->middleware('isAdmin');
+    Route::get('updatepr', 'MainController@updatepr')->middleware('isAdmin');
+    Route::get('updatecac', 'MainController@updatecac')->middleware('isAdmin');
+    Route::get('updatebill', 'MainController@updatebill')->middleware('isAdmin');
+    Route::post('updateall', 'MainController@updateall')->middleware('isAdmin');
 
-    Route::get('/admin/inventory-requests', 'AdminController@viewinventoryreq')->middleware('isAdmin');
-    Route::post('/admin/inventory-requests', 'AdminController@searchinventoryreq')->middleware('isAdmin');
-    Route::get('/admin/approve-request/{inventoryreq_id}', 'AdminController@approveinventoryreq')->middleware('isAdmin');
-    Route::get('/admin/disapprove-request/{inventoryreq_id}', 'AdminController@disapproveinventoryreq')->middleware('isAdmin');
+    Route::get('employees', 'MainController@viewstaff')->middleware('isAdmin');
+    Route::get('employees/new', 'MainController@viewaddstaff')->middleware('isAdmin');
+    Route::get('employees/new/add', 'MainController@addstaff')->middleware('isAdmin');
+    Route::get('employees/view/{user_id}', 'MainController@viewstaffdetails')->middleware('isAdmin');
+    Route::get('employees/update', 'MainController@updateemployee')->middleware('isAdmin');
 
-    Route::get('/admin/staff-logs', 'AdminController@viewstafflogs')->middleware('isAdmin');
-    Route::post('/admin/staff-logs', 'AdminController@searchstafflogs')->middleware('isAdmin');
+    Route::get('payments', 'MainController@viewpayments')->middleware('isAdmin');
 
-    Route::get('/admin/dogs-onboard', 'AdminController@dogsonboard')->middleware('isAdmin');
-    Route::get('/admin/staff-onduty', 'AdminController@staffonduty')->middleware('isAdmin');
+    Route::get('settings/document-types', 'MainController@viewdoctypes')->middleware('isAdmin');
+    Route::get('settings/document-types/update', 'MainController@updatedoctype')->middleware('isAdmin');
+    Route::get('settings/document-types/add', 'MainController@adddoctype')->middleware('isAdmin');
+    Route::get('settings/document-types/delete', 'MainController@deldoctype')->middleware('isAdmin');
 
-    Route::get('/admin/petinfo/{pet_id}','PetInfoController@petprofile')->middleware('isAdmin');
-    Route::get('/admin/petinfo/breed/{breed_id}','PetInfoController@selectbreed')->middleware('isAdmin');
-    Route::get('/admin/petinfo/age','PetInfoController@sortage')->middleware('isAdmin');
-    Route::get('/admin/petinfo', 'PetInfoController@petinfo')->middleware('isAdmin');
-    Route::post('/admin/petinfo', 'PetInfoController@searchpet')->middleware('isAdmin');
-    Route::get('/admin/add-pet', 'PetInfoController@viewaddpet')->middleware('isAdmin');
-    Route::post('/admin/add-pet', 'PetInfoController@addpet')->middleware('isAdmin');
-    Route::get('/admin/edit-petinfo/{pet_id}', 'PetInfoController@vieweditpetinfo')->middleware('isAdmin');
-    Route::post('/admin/edit-petinfo/{pet_id}', 'PetInfoController@editpetinfo')->middleware('isAdmin');
+    Route::get('settings/client-types', 'MainController@viewclienttypes')->middleware('isAdmin');
+    Route::get('settings/client-types/update', 'MainController@updateclienttype')->middleware('isAdmin');
+    Route::get('settings/client-types/add', 'MainController@addclienttype')->middleware('isAdmin');
+    Route::get('settings/client-types/delete', 'MainController@delclienttype')->middleware('isAdmin');
 
-    Route::get('/admin/set-dogboard/{pet_id}', 'PetInfoController@viewsetdogboard')->middleware('isAdmin');
-    Route::post('/admin/set-dogboard/{pet_id}', 'PetInfoController@setdogboard')->middleware('isAdmin');
+    Route::get('settings/qualifications', 'MainController@viewcourses')->middleware('isAdmin');
+    Route::get('settings/courses/update', 'MainController@updatecourse')->middleware('isAdmin');
+    Route::get('settings/courses/add', 'MainController@addcourse')->middleware('isAdmin');
+    Route::get('settings/courses/delete', 'MainController@delcourse')->middleware('isAdmin');
 
-    Route::get('/admin/userinfo', 'UserInfoController@userinfo')->middleware('isAdmin');
-    Route::get('/admin/userinfo/{user_id}', 'UserInfoController@userprofile')->middleware('isAdmin');
-    Route::post('/admin/userinfo', 'UserInfoController@searchuser')->middleware('isAdmin');
-    Route::get('/admin/add-petparent', 'UserInfoController@viewaddparent')->middleware('isAdmin');
-    Route::post('/admin/add-petparent', 'UserInfoController@addparent')->middleware('isAdmin');
+    Route::get('settings/agency-types', 'MainController@viewagencytypes')->middleware('isAdmin');
+    Route::get('settings/agency-types/update', 'MainController@updateagencytype')->middleware('isAdmin');
+    Route::get('settings/agency-types/add', 'MainController@addagencytype')->middleware('isAdmin');
+    Route::get('settings/agency-types/delete','MainController@delagencytype')->middleware('isAdmin');
 
-    Route::get('/admin/staffinfo', 'StaffInfoController@staffinfo')->middleware('isAdmin');
-    Route::get('/admin/staffinfo/{staff_id}', 'StaffInfoController@staffprofile')->middleware('isAdmin');
-    Route::post('/admin/staffinfo', 'StaffInfoController@searchstaff')->middleware('isAdmin');
-    Route::get('/admin/add-staff', 'StaffInfoController@viewaddstaff')->middleware('isAdmin');
-    Route::post('/admin/add-staff', 'StaffInfoController@addstaff')->middleware('isAdmin');
+    Route::get('settings/serial-numbers', 'MainController@viewserialnum')->middleware('isAdmin');
+    Route::get('settings/serial-numbers/add', 'MainController@addserialnum')->middleware('isAdmin');
+    Route::get('settings/serial-numbers/update', 'MainController@updateserialnum')->middleware('isAdmin');
+    Route::get('settings/serial-numbers/delete', 'MainController@delserialnum')->middleware('isAdmin');
 
-    Route::get('/user/user-home', 'StaffInfoController@staffhome')->middleware('isAdmin');
-    Route::post('/user/user-home', 'StaffInfoController@addlog')->middleware('isAdmin');
+    Route::get('misc/archives', 'MainController@viewarchive')->middleware('isAdmin');
+    Route::get('misc/logs', 'MainController@viewlogs')->middleware('isAdmin');
+    /* ClientsController */
+    Route::get('agencies', [
+        'uses' => 'ClientsController@vieworigin',
+        'as' => 'agencies.list'
+    ]);
+    Route::get('agencies/new', 'ClientsController@viewneworigin');
+    Route::get('agencies/new/add', 'ClientsController@addneworigin');
+    Route::get('agencies/view/{origin_id}', 'ClientsController@vieworigindetails');
+    Route::get('agencies/update', 'ClientsController@updateorigin')->middleware('isAdmin');
+    //Route::get('agencies/delete/{id}', 'ClientsController@deleteorigin')->middleware('isAdmin');
 
-    Route::get('/user/task-done/{task_id}', 'StaffInfoController@taskdone')->middleware('isAdmin');
-    Route::get('/user/my-requests', 'StaffInfoController@viewmyinvreq')->middleware('isAdmin');
-    Route::post('/user/my-requests', 'StaffInfoController@addinvreq')->middleware('isAdmin');
-    Route::get('/user/cancel-request/{inventoryreq_id}', 'StaffInfoController@cancelreq')->middleware('isAdmin');
-    Route::post('/user/search-request', 'StaffInfoController@searchreq')->middleware('isAdmin');
+    Route::get('assessors', [
+        'uses' => 'ClientsController@viewassessors',
+        'as' => 'assessors.list'
+    ]);
+    Route::get('assessors/new', 'ClientsController@viewnewassessor')->middleware('isAdmin');
+    Route::post('assessors/new/add', 'ClientsController@addnewassessor')->middleware('isAdmin');
+    Route::get('assessors/view/{id}', 'ClientsController@viewassessordetails')->middleware('isAdmin');
+    Route::post('assessors/update', 'ClientsController@updateassessor')->middleware('isAdmin');
+    Route::get('assessors/delete/{aid}', 'ClientsController@deleteassessor')->middleware('isAdmin');
+    Route::get('certificate/pdf/{id}', 'ClientsController@viewpdf')->middleware('isAdmin');
 
-    Route::get('/user/my-logs', 'StaffInfoController@viewmylogs')->middleware('isAdmin');
-    Route::post('/user/my-logs', 'StaffInfoController@searchlog')->middleware('isAdmin');
-
-    Route::get('/user/pets-onboard', 'StaffInfoController@viewpetsonboard')->middleware('isAdmin');
-    Route::get('/user/pet-profile/{pet_id}', 'PetinfoController@viewpetprofile2')->middleware('isAdmin');
+    /* GettersController */
+    Route::get('settings/getdoctypeinfo', 'GettersController@getdoctypeinfo')->middleware('isAdmin');
+    Route::get('settings/getclienttypeinfo', 'GettersController@getclienttypeinfo')->middleware('isAdmin');
+    Route::get('settings/getcourseinfo', 'GettersController@getcourseinfo')->middleware('isAdmin');
+    Route::get('settings/getagencytypeinfo', 'GettersController@getagencytypeinfo')->middleware('isAdmin');
+    Route::get('settings/getserialnuminfo', 'GettersController@getserialnuminfo')->middleware('isAdmin');
+    Route::get('getcheckinfo', 'GettersController@getcheckdetails')->middleware('isAdmin');
+    Route::get('checkduplicate', 'GettersController@checkduplicate')->middleware('isAdmin');
 
 });

@@ -54,18 +54,17 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'doggydaycare'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', 'k1tk@t'),
+            'host' => env('DB_HOST', 'forge'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'options' => [PDO::ATTR_EMULATE_PREPARES => true],
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
             'strict' => false,
-            'engine' => null,
         ],
-        
+
         /*
         'sqlsrv' => [
             'driver' => 'sqlsrv',
@@ -93,7 +92,7 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-        ],*/                
+        ],*/
 
         'pgsql' => [
             'driver' => 'pgsql',
@@ -108,8 +107,8 @@ return [
         ],
 
     ],
-    
-    
+
+
 
     /*
     |--------------------------------------------------------------------------
